@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Una pregunta muy importante</title>
+    <style>
+        /* Paleta de colores romántica */
+        :root {
+            --color-primary: #ff6b8b;
+            --color-secondary: #ff8e9e;
+            --color-accent: #ffb3c1;
+            --color-text: #333;
+            --color-light: #fff5f7;
+            --color-success: #4caf50;
+            --color-danger: #f44336;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background-color: var(--color-light);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-image: 
+                radial-gradient(circle at 10% 20%, var(--color-accent) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, var(--color-accent) 0%, transparent 20%);
+            animation: bgPulse 15s infinite alternate;
+            overflow-x: hidden;
+            padding: 20px;
+        }
+
+        @keyframes bgPulse {
+            0% { background-position: 10% 20%, 90% 80%; }
+            100% { background-position: 15% 25%, 85% 75%; }
+        }
+
+        .container {
+            text-align: center;
+            padding: 2rem;
+            max-width: 600px;
+            width: 100%;
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transform: scale(0.95);
+            opacity: 0;
+            animation: fadeIn 1s ease-out forwards;
+            position: relative;
+            overflow: hidden;
+        }
+
+        @keyframes fadeIn {
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 10px;
+            background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+        }
+
+        h1 {
+            color: var(--color-primary);
+            margin-bottom: 1.5rem;
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            animation: textFloat 3s ease-in-out infinite;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        @keyframes textFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            position: relative;
+            overflow: hidden;
+            min-width: 120px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transform: translateY(20px);
+            opacity: 0;
+            z-index: 1;
+        }
+
+        .btn-yes {
+            background-color: var(--color-success);
+            color: white;
+            animation: buttonAppear 0.5s ease-out 0.5s forwards;
+        }
+
+        .btn-no {
+            background-color: var(--color-danger);
+            color: white;
+            animation: buttonAppear 0.5s ease-out 0.7s forwards;
+        }
+
+        @keyframes buttonAppear {
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn:active {
+            transform: translateY(1px);
+        }
+
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 5px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.5);
+            opacity: 0;
+            border-radius: 100%;
+            transform: scale(1, 1) translate(-50%);
+            transform-origin: 50% 50%;
+            z-index: -1;
+        }
+
+        .btn:focus:not(:active)::after {
+            animation: ripple 1s ease-out;
+        }
+
+        @keyframes ripple {
+            0% {
+                transform: scale(0, 0);
+                opacity: 0.5;
+            }
+            100% {
+                transform: scale(20, 20);
+                opacity: 0;
+            }
+        }
+
+        .heart {
+            position: absolute;
+            pointer-events: none;
+            animation: float 4s ease-in-out infinite;
+            opacity: 0;
+            z-index: 0;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) rotate(20deg);
+                opacity: 0;
+            }
+        }
+
+        .message {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            border-radius: 10px;
+            background-color: var(--color-accent);
+            color: white;
+            font-weight: bold;
+            display: none;
+            animation: fadeInUp 0.5s ease-out;
+            font-size: 1.2rem;
+            line-height: 1.5;
+        }
+
+        .success-message {
+            background: linear-gradient(135deg, var(--color-success), #66bb6a);
+            padding: 2rem;
+            border-radius: 15px;
+            color: white;
+            font-size: 1.3rem;
+            display: none;
+            animation: fadeInUp 0.5s ease-out;
+            margin-top: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hearts-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* Efecto especial para el botón No */
+        .no-move {
+            transition: all 0.1s ease;
+            position: relative;
+        }
+
+        /* Responsive design */
+        @media (max-width: 600px) {
+            .container {
+                padding: 1.5rem;
+            }
+            
+            .btn {
+                padding: 10px 25px;
+                font-size: 1rem;
+                min-width: 100px;
+            }
+            
+            .message, .success-message {
+                font-size: 1rem;
+                padding: 1rem;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+        }
+
+        /* Animación de celebración */
+        @keyframes celebrate {
+            0% { transform: scale(1) rotate(0deg); }
+            25% { transform: scale(1.05) rotate(2deg); }
+            50% { transform: scale(1.1) rotate(-2deg); }
+            75% { transform: scale(1.05) rotate(2deg); }
+            100% { transform: scale(1) rotate(0deg); }
+        }
+
+        .celebrate {
+            animation: celebrate 0.5s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="hearts-container" id="heartsContainer"></div>
+    
+    <div class="container" id="mainContainer">
+        <h1>¿Quieres ser mi novia?</h1>
+        
+        <div class="buttons">
+            <button class="btn btn-yes" id="btnYes">¡Sí!</button>
+            <button class="btn btn-no no-move" id="btnNo">No</button>
+        </div>
+        
+        <div class="message" id="message"></div>
+        <div class="success-message" id="successMessage">
+            ¡Sabía que dirías que sí! 💖<br><br>
+            Eres la persona más especial en mi vida y no puedo esperar para comenzar esta hermosa relación contigo.<br><br>
+            Prometo hacerte feliz cada día y llenar nuestra vida de amor y momentos inolvidables. ¡Te amo!
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const btnYes = document.getElementById('btnYes');
+            const btnNo = document.getElementById('btnNo');
+            const message = document.getElementById('message');
+            const successMessage = document.getElementById('successMessage');
+            const heartsContainer = document.getElementById('heartsContainer');
+            const mainContainer = document.getElementById('mainContainer');
+            
+            // Respuesta para el Sí
+            btnYes.addEventListener('click', function() {
+                // Ocultar elementos no necesarios
+                btnYes.style.display = 'none';
+                btnNo.style.display = 'none';
+                document.querySelector('h1').style.display = 'none';
+                
+                // Mostrar mensaje de éxito
+                successMessage.style.display = 'block';
+                
+                // Crear corazones
+                createHearts(50);
+                
+                // Animación de celebración
+                mainContainer.classList.add('celebrate');
+                
+                // Cambiar fondo del contenedor
+                mainContainer.style.background = 'linear-gradient(135deg, #f5f7fa, #ffebee)';
+                
+                // Deshabilitar botones después de la respuesta
+                btnYes.disabled = true;
+                btnNo.disabled = true;
+            });
+            
+            // Respuesta para el No
+            btnNo.addEventListener('click', function() {
+                message.textContent = "Gracias por tu honestidad. Valoro mucho nuestra relación de todas formas. 💕";
+                message.style.display = 'block';
+                message.style.backgroundColor = '#f44336';
+                
+                // Deshabilitar botones después de la respuesta
+                btnYes.disabled = true;
+                btnNo.disabled = true;
+            });
+            
+            // Efecto de movimiento para el botón No
+            btnNo.addEventListener('mouseover', function() {
+                if (!btnNo.disabled) {
+                    // Mover el botón a una posición aleatoria pero dentro de la pantalla visible
+                    const containerRect = mainContainer.getBoundingClientRect();
+                    const btnRect = btnNo.getBoundingClientRect();
+                    
+                    const maxX = containerRect.width - btnRect.width - 20;
+                    const maxY = containerRect.height - btnRect.height - 20;
+                    
+                    const randomX = Math.floor(Math.random() * maxX);
+                    const randomY = Math.floor(Math.random() * maxY);
+                    
+                    btnNo.style.position = 'absolute';
+                    btnNo.style.left = randomX + 'px';
+                    btnNo.style.top = randomY + 'px';
+                    btnNo.style.transition = 'all 0.3s ease-out';
+                }
+            });
+            
+            // Función para crear corazones
+            function createHearts(count) {
+                for (let i = 0; i < count; i++) {
+                    setTimeout(() => {
+                        const heart = document.createElement('div');
+                        heart.classList.add('heart');
+                        heart.innerHTML = '❤️';
+                        heart.style.left = Math.random() * 100 + 'vw';
+                        heart.style.top = '100vh';
+                        heart.style.fontSize = (Math.random() * 20 + 10) + 'px';
+                        heart.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                        heartsContainer.appendChild(heart);
+                        
+                        // Eliminar el corazón después de la animación
+                        setTimeout(() => {
+                            heart.remove();
+                        }, 4000);
+                    }, i * 100);
+                }
+            }
+        });
+    </script>
+</body>
+</html>
